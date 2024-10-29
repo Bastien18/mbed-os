@@ -77,7 +77,7 @@ TLSSocketWrapper::TLSSocketWrapper(Socket *transport, const char *hostname, cont
 TLSSocketWrapper::~TLSSocketWrapper()
 {
     if (_transport) {
-        TLSSocketWrapper::close();
+        close();
     }
     mbedtls_entropy_free(&_entropy);
 

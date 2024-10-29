@@ -764,8 +764,10 @@ protocol_interface_info_entry_t *protocol_stack_interface_info_get_by_id(int8_t 
 {
     ns_list_foreach(protocol_interface_info_entry_t, cur, &protocol_interface_info_list)
     if (cur->id == nwk_id) {
+        //tr_info("Cur is %p with cur id = %d and nwk id = %d ws_info = %p", cur, cur->id, nwk_id, ws_info(cur));
         return cur;
     }
+    tr_info("No interface found");
 
     return NULL;
 }

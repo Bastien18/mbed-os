@@ -2715,16 +2715,24 @@ void ws_bootstrap_test_procedure_trigger_exec(protocol_interface_info_entry_t *c
     switch (procedure) {
         case PROCEDURE_DIS:
             if (cur->nwk_bootstrap_state == ER_RPL_SCAN || ws_bootstrap_state_active(cur)) {
-                tr_info("trigger DODAG information object solicit");
-                rpl_control_transmit_dis(cur->rpl_domain, cur, 0, 0, NULL, 0, ADDR_LINK_LOCAL_ALL_RPL_NODES);
+                if(cur->bootsrap_mode == ARM_NWK_BOOTSRAP_MODE_6LoWPAN_ROUTER || cur->bootsrap_mode == ARM_NWK_BOOTSRAP_MODE_6LoWPAN_BORDER_ROUTER){
+                    tr_info("trigger DODAG information object solicit");
+                    rpl_control_transmit_dis(cur->rpl_domain, cur, 0, 0, NULL, 0, ADDR_LINK_LOCAL_ALL_RPL_NODES);
+                }else{
+                    tr_warn("Doesn't trigger DODAG information DIS");
+                }
             } else {
                 tr_info("wrong state: DODAG information object solicit not triggered");
             }
             break;
         case PROCEDURE_DIO:
             if (ws_bootstrap_state_active(cur)) {
-                tr_info("trigger DODAG information object");
-                rpl_control_transmit_dio_trigger(cur, cur->rpl_domain);
+                if(cur->bootsrap_mode == ARM_NWK_BOOTSRAP_MODE_6LoWPAN_ROUTER || cur->bootsrap_mode == ARM_NWK_BOOTSRAP_MODE_6LoWPAN_BORDER_ROUTER){
+                    tr_info("trigger DODAG information object");
+                    rpl_control_transmit_dio_trigger(cur, cur->rpl_domain);
+                }else{
+                    tr_warn("Doesn't trigger DODAG information DIS");
+                }
             } else {
                 tr_info("wrong state: DODAG information object not triggered");
             }

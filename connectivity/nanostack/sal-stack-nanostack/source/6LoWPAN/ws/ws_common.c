@@ -662,12 +662,22 @@ uint32_t ws_common_authentication_time_get(protocol_interface_info_entry_t *cur)
 
 void ws_common_primary_parent_update(protocol_interface_info_entry_t *interface, mac_neighbor_table_entry_t *neighbor)
 {
-    ws_bootstrap_6lr_primary_parent_update(interface, neighbor);
+    if (wisun_mode_host(interface)) {
+        tr_warn("Primary host");
+        ws_bootstrap_6ln_primary_parent_update(interface, neighbor);
+    } else {
+        ws_bootstrap_6lr_primary_parent_update(interface, neighbor);
+    } 
 }
 
 void ws_common_secondary_parent_update(protocol_interface_info_entry_t *interface)
 {
-    ws_bootstrap_6lr_secondary_parent_update(interface);
+    if (wisun_mode_host(interface)) {
+        tr_warn("Secondary host");
+        ws_bootstrap_6ln_secondary_parent_update(interface);
+    } else {
+        ws_bootstrap_6lr_secondary_parent_update(interface);
+    } 
 }
 
 void ws_common_border_router_alive_update(protocol_interface_info_entry_t *interface)

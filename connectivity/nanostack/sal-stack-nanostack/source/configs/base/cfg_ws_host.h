@@ -22,3 +22,7 @@
 #define HAVE_6LOWPAN_ND
 #define HAVE_IPV6_ND
 #define HAVE_6LOWPAN_ROUTER
+
+// TODO delete it
+#define HAVE_RPL
+#define HAVE_WS_ROUTER

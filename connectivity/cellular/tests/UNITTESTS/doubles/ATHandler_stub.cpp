@@ -201,10 +201,6 @@ void ATHandler::skip_param(ssize_t len, uint32_t count)
 {
 }
 
-void ATHandler::skip_param_bytes(ssize_t len, uint32_t count)
-{
-}
-
 ssize_t ATHandler::read_bytes(uint8_t *buf, size_t len)
 {
     return ATHandler_stub::ssize_value;
@@ -301,11 +297,6 @@ bool ATHandler::info_elem(char start_tag)
 }
 
 bool ATHandler::consume_to_stop_tag()
-{
-    return ATHandler_stub::bool_value;
-}
-
-bool ATHandler::consume_to_stop_tag_even_found()
 {
     return ATHandler_stub::bool_value;
 }

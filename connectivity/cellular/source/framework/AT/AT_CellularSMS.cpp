@@ -420,7 +420,6 @@ nsapi_size_or_error_t AT_CellularSMS::send_sms(const char *phone_number, const c
     }
 
     _at.lock();
-    _at.set_at_timeout(10s);
 
     int write_size = 0;
 
@@ -438,7 +437,6 @@ nsapi_size_or_error_t AT_CellularSMS::send_sms(const char *phone_number, const c
                 // sending can be cancelled by giving <ESC> character (IRA 27).
                 _at.cmd_start(ESC);
                 _at.cmd_stop();
-                _at.restore_at_timeout();
                 _at.unlock();
                 return write_size;
             }
@@ -484,7 +482,6 @@ nsapi_size_or_error_t AT_CellularSMS::send_sms(const char *phone_number, const c
             pdu_str = create_pdu(phone_number, message + i * concatenated_sms_length, pdu_len,
                                  sms_count, i + 1, header_len);
             if (!pdu_str) {
-                _at.restore_at_timeout();
                 _at.unlock();
                 return NSAPI_ERROR_NO_MEMORY;
             }
@@ -512,7 +509,6 @@ nsapi_size_or_error_t AT_CellularSMS::send_sms(const char *phone_number, const c
                     // sending can be cancelled by giving <ESC> character (IRA 27).
                     _at.cmd_start(ESC);
                     _at.cmd_stop();
-                    _at.restore_at_timeout();
                     _at.unlock();
                     delete [] pdu_str;
                     return msg_write_len;
@@ -527,7 +523,6 @@ nsapi_size_or_error_t AT_CellularSMS::send_sms(const char *phone_number, const c
             delete [] pdu_str;
             remaining_len -= concatenated_sms_length;
             if (_at.get_last_error() != NSAPI_ERROR_OK) {
-                _at.restore_at_timeout();
                 return _at.unlock_return_error();
             }
         }
@@ -535,7 +530,6 @@ nsapi_size_or_error_t AT_CellularSMS::send_sms(const char *phone_number, const c
 
     _sms_message_ref_number++;
     nsapi_error_t ret = _at.get_last_error();
-    _at.restore_at_timeout();
     _at.unlock();
 
     return (ret == NSAPI_ERROR_OK) ? msg_len : ret;
@@ -703,7 +697,6 @@ nsapi_size_or_error_t AT_CellularSMS::get_sms(char *buf, uint16_t len, char *pho
     }
 
     _at.lock();
-    _at.set_at_timeout(10s);
 
     nsapi_size_or_error_t err = list_messages();
     if (err == NSAPI_ERROR_OK) {
@@ -717,7 +710,6 @@ nsapi_size_or_error_t AT_CellularSMS::get_sms(char *buf, uint16_t len, char *pho
                     *buf_size = info->msg_size;
                 }
                 free_linked_list();
-                _at.restore_at_timeout();
                 _at.unlock();
                 return NSAPI_ERROR_PARAMETER;
             }
@@ -742,7 +734,6 @@ nsapi_size_or_error_t AT_CellularSMS::get_sms(char *buf, uint16_t len, char *pho
 
     free_linked_list();
 
-    _at.restore_at_timeout();
     _at.unlock();
 
     // update error only when there really was an error, otherwise we return the length
@@ -1036,7 +1027,6 @@ nsapi_error_t AT_CellularSMS::list_messages()
     int index = 0;
     int length = 0;
     char *pdu = NULL;
-    char buffer[32]; // 32 > SMS_STATUS_SIZE, SMS_MAX_PHONE_NUMBER_SIZE, SMS_MAX_TIME_STAMP_SIZE
 
     _at.resp_start("+CMGL:");
     while (_at.info_resp()) {
@@ -1059,18 +1049,8 @@ nsapi_error_t AT_CellularSMS::list_messages()
             // +CMGL: <index>,<stat>,<oa/da>,[<alpha>],[<scts>][,<tooa/toda>,<length>]<CR><LF><data>[<CR><LF>
             // +CMGL: <index>,<stat>,<da/oa>,[<alpha>],[<scts>][,<tooa/toda>,<length>]<CR><LF><data>[...]]
             index = _at.read_int();
-            _at.read_string(buffer, SMS_STATUS_SIZE);
-            _at.read_string(buffer, SMS_MAX_PHONE_NUMBER_SIZE);
-            _at.skip_param(); // <alpha>
-            _at.read_string(buffer, SMS_MAX_TIME_STAMP_SIZE);
-            _at.read_int();
-            int size = _at.read_int(); // length
-            _at.consume_to_stop_tag(); //  consume until <CR><LF> end of header
-            if (size > 0) {
-                // we can not use skip param because we already consumed stop tag
-                _at.skip_param_bytes(size, 1);
-            }
-            _at.consume_to_stop_tag_even_found(); // consume until <CR><LF> -> data
+            (void)_at.consume_to_stop_tag(); // consume until <CR><LF>
+            (void)_at.consume_to_stop_tag(); // consume until <CR><LF>
         }
 
         if (index >= 0) {

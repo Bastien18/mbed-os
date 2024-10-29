@@ -237,9 +237,15 @@ static void wisun_tasklet_configure_and_connect_to_network(void)
 
     fhss_timer_t *fhss_timer_ptr = &fhss_functions;
 
+    tr_info("Device type is : %d", MBED_CONF_MBED_MESH_API_WISUN_DEVICE_TYPE);
+
     if (MBED_CONF_MBED_MESH_API_WISUN_DEVICE_TYPE == MESH_DEVICE_TYPE_WISUN_BORDER_ROUTER) {
         wisun_tasklet_data_ptr->operating_mode = NET_6LOWPAN_BORDER_ROUTER;
-    } else {
+    } 
+    else if (MBED_CONF_MBED_MESH_API_WISUN_DEVICE_TYPE == MESH_DEVICE_TYPE_WISUN_LEAF_NODE){
+        wisun_tasklet_data_ptr->operating_mode = NET_6LOWPAN_HOST;
+    }
+    else {
         wisun_tasklet_data_ptr->operating_mode = NET_6LOWPAN_ROUTER;
     }
 

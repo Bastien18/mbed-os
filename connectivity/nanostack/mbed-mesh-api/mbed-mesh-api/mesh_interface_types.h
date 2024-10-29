@@ -61,7 +61,8 @@ typedef enum {
     MESH_DEVICE_TYPE_THREAD_SLEEPY_END_DEVICE,  /*<! Thread Sleepy end device */
     MESH_DEVICE_TYPE_THREAD_MINIMAL_END_DEVICE, /*<! Thread minimal end device */
     MESH_DEVICE_TYPE_WISUN_ROUTER,              /*<! Wi-SUN router */
-    MESH_DEVICE_TYPE_WISUN_BORDER_ROUTER        /*<! Wi-SUN border router */
+    MESH_DEVICE_TYPE_WISUN_BORDER_ROUTER,       /*<! Wi-SUN border router */
+    MESH_DEVICE_TYPE_WISUN_LEAF_NODE            /*<! Wi-SUN leaf node */
 } mesh_device_type_t;
 
 /**

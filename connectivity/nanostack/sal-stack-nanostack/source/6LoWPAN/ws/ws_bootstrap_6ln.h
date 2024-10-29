@@ -27,6 +27,9 @@ void  ws_bootstrap_6ln_event_handler(protocol_interface_info_entry_t *cur, arm_e
 void  ws_bootstrap_6ln_state_machine(protocol_interface_info_entry_t *cur);
 void  ws_bootstrap_6ln_seconds_timer(protocol_interface_info_entry_t *cur, uint32_t seconds);
 
+void ws_bootstrap_6ln_primary_parent_update(protocol_interface_info_entry_t *interface, mac_neighbor_table_entry_t *neighbor);
+void ws_bootstrap_6ln_secondary_parent_update(protocol_interface_info_entry_t *interface);
+void ws_bootstrap_6ln_address_registration_update(protocol_interface_info_entry_t *interface, const uint8_t addr[16]);
 int8_t  ws_bootstrap_6ln_up(protocol_interface_info_entry_t *cur);
 int8_t  ws_bootstrap_6ln_down(protocol_interface_info_entry_t *cur);
 

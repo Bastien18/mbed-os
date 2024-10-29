@@ -20,7 +20,6 @@
 #include <stdbool.h>
 #include "m480_eth.h"
 #include "mbed_toolchain.h"
-#include "mbed_interface.h"
 //#define NU_TRACE
 #include "numaker_eth_hal.h"
 

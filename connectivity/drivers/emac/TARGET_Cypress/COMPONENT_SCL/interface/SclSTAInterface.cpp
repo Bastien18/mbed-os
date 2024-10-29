@@ -205,7 +205,6 @@ nsapi_error_t SclSTAInterface::set_credentials(const char *ssid, const char *pas
 
 nsapi_error_t SclSTAInterface::connect()
 {
-
     uint32_t delay_timeout = 0;
     scl_result_t ret_val;
     nsapi_error_t interface_status;
